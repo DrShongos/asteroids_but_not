@@ -50,13 +50,14 @@ impl ShipPlugin {
             SpriteSheetBundle {
                 transform: Transform {
                     translation: vec3(0., 0., 0.),
+                    scale: vec3(4., 4., 4.),
                     ..Default::default()
                 },
                 texture_atlas: ship_atlas.clone(),
                 sprite: TextureAtlasSprite::new(0),
                 ..Default::default()
             },
-            Ship::new(2., 4., 2., 2.),
+            Ship::new(2., 8., 5., 2.),
             Player,
             WrapAround,
         ));

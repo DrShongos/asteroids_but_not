@@ -30,8 +30,8 @@ impl AsteroidPlugin {
         spawn_asteroid(
             &mut commands,
             4,
-            3.0,
-            75.,
+            7.0,
+            750.,
             vec2(-0.45, 0.35),
             vec2(80., 3.),
             &game_assets,
@@ -40,8 +40,8 @@ impl AsteroidPlugin {
         spawn_asteroid(
             &mut commands,
             6,
-            1.5,
-            45.,
+            4.0,
+            450.,
             vec2(0.45, -0.35),
             vec2(-80., 3.),
             &game_assets,
@@ -50,8 +50,8 @@ impl AsteroidPlugin {
         spawn_asteroid(
             &mut commands,
             2,
-            4.5,
-            100.,
+            15.0,
+            1000.,
             vec2(0.15, 0.24),
             vec2(8., -30.),
             &game_assets,
@@ -89,7 +89,7 @@ pub fn spawn_asteroid(
         SpriteSheetBundle {
             transform: Transform {
                 translation: position.extend(1.0),
-                scale: Vec3::new(1.0 * (tier as f32 / 4.), 1.0 * (tier as f32 / 4.), 1.0),
+                scale: Vec3::new(tier as f32, tier as f32, 1.0),
                 ..Default::default()
             },
             texture_atlas: asteroid_atlas.clone(),

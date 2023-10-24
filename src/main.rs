@@ -21,8 +21,7 @@ fn main() {
 }
 
 fn setup_camera(mut commands: Commands) {
-    let mut camera2d_bundle = Camera2dBundle::default();
-    camera2d_bundle.projection.scale = 0.25; // TODO: Remove this and make all objects larger instead
+    let camera2d_bundle = Camera2dBundle::default();
 
     commands.spawn(camera2d_bundle);
 }

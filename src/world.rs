@@ -17,7 +17,7 @@ impl Plugin for WorldPlugin {
 
 impl WorldPlugin {
     fn get_bounds(mut commands: Commands) {
-        let bounds = WorldBounds(vec2(1280. / 7.5, 720. / 7.5));
+        let bounds = WorldBounds(vec2(1280.0 / 1.75, 720.0 / 1.75));
 
         commands.insert_resource(bounds);
     }
