@@ -1,5 +1,8 @@
-use crate::{game_assets::GameAssets, player::Player, world::WrapAround};
-use bevy::{math::vec3, prelude::*};
+use crate::{collision::Collider, game_assets::GameAssets, player::Player, world::WrapAround};
+use bevy::{
+    math::{vec2, vec3},
+    prelude::*,
+};
 
 #[derive(Component)]
 pub struct Ship {
@@ -60,6 +63,9 @@ impl ShipPlugin {
             Ship::new(2., 8., 5., 2.),
             Player,
             WrapAround,
+            Collider {
+                bounds: vec2(16.0 * 4.0, 16.0 * 4.0),
+            },
         ));
     }
 

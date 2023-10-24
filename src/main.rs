@@ -1,6 +1,7 @@
 use bevy::prelude::*;
 
 mod asteroid;
+mod collision;
 mod game_assets;
 mod player;
 mod ship;
@@ -15,6 +16,7 @@ fn main() {
             player::PlayerPlugin,
             world::WorldPlugin,
             asteroid::AsteroidPlugin,
+            collision::CollisionPlugin,
         ))
         .add_systems(Startup, setup_camera)
         .run();

@@ -1,6 +1,6 @@
 use bevy::{math::vec2, prelude::*};
 
-use crate::{game_assets::GameAssets, world::WrapAround};
+use crate::{collision::Collider, game_assets::GameAssets, world::WrapAround};
 
 #[derive(Component)]
 pub struct Asteroid {
@@ -18,8 +18,7 @@ pub struct AsteroidPlugin;
 
 impl Plugin for AsteroidPlugin {
     fn build(&self, app: &mut App) {
-        app
-            .add_systems(Startup, Self::populate_with_asteroids)
+        app.add_systems(Startup, Self::populate_with_asteroids)
             .add_systems(FixedUpdate, Self::asteroid_movement);
     }
 }
@@ -33,7 +32,7 @@ impl AsteroidPlugin {
             7.0,
             750.,
             vec2(-0.45, 0.35),
-            vec2(80., 3.),
+            vec2(300., 30.),
             &game_assets,
             0,
         );
@@ -43,7 +42,7 @@ impl AsteroidPlugin {
             4.0,
             450.,
             vec2(0.45, -0.35),
-            vec2(-80., 3.),
+            vec2(-320., 30.),
             &game_assets,
             1,
         );
@@ -53,16 +52,13 @@ impl AsteroidPlugin {
             15.0,
             1000.,
             vec2(0.15, 0.24),
-            vec2(8., -30.),
+            vec2(200., -30.),
             &game_assets,
             2,
         );
     }
 
-    fn asteroid_movement(
-        mut asteroid_query: Query<(&mut Transform, &Asteroid)>,
-        time: Res<Time>,
-    ) {
+    fn asteroid_movement(mut asteroid_query: Query<(&mut Transform, &Asteroid)>, time: Res<Time>) {
         for (mut transform, asteroid) in asteroid_query.iter_mut() {
             let delta = time.delta_seconds();
             let movement = (asteroid.velocity * delta).extend(0.0);
@@ -104,6 +100,9 @@ pub fn spawn_asteroid(
             velocity: direction * speed,
             tier,
             hits: tier,
+        },
+        Collider {
+            bounds: vec2(16.0 * tier as f32, 16.0 * tier as f32),
         },
     ));
 }

@@ -19,22 +19,24 @@ impl PlayerPlugin {
         keys: Res<Input<KeyCode>>,
         time: Res<Time>,
     ) {
-        let (mut ship, mut transform) = player_query.single_mut();
+        let player = player_query.get_single_mut();
 
-        let delta = time.delta_seconds();
+        if let Ok((mut ship, mut transform)) = player {
+            let delta = time.delta_seconds();
 
-        if keys.pressed(KeyCode::A) || keys.pressed(KeyCode::Left) {
-            transform.rotate_z(ship.rotation_speed * delta);
-        }
+            if keys.pressed(KeyCode::A) || keys.pressed(KeyCode::Left) {
+                transform.rotate_z(ship.rotation_speed * delta);
+            }
 
-        if keys.pressed(KeyCode::D) || keys.pressed(KeyCode::Right) {
-            transform.rotate_z(-1. * ship.rotation_speed * delta);
-        }
+            if keys.pressed(KeyCode::D) || keys.pressed(KeyCode::Right) {
+                transform.rotate_z(-1. * ship.rotation_speed * delta);
+            }
 
-        if keys.pressed(KeyCode::W) || keys.pressed(KeyCode::Up) {
-            ship.moving = true;
-        } else {
-            ship.moving = false;
+            if keys.pressed(KeyCode::W) || keys.pressed(KeyCode::Up) {
+                ship.moving = true;
+            } else {
+                ship.moving = false;
+            }
         }
     }
 }
