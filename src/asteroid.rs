@@ -102,7 +102,7 @@ pub fn spawn_asteroid(
             hits: tier,
         },
         Collider {
-            bounds: vec2(16.0 * tier as f32, 16.0 * tier as f32),
+            bounds: vec2(16.0 * (tier as f32 / 1.25), 16.0 * (tier as f32 / 1.25)),
         },
     ));
 }
