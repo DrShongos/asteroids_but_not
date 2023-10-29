@@ -4,9 +4,6 @@ use crate::{collision::Collider, game_assets::GameAssets, world::WrapAround};
 
 #[derive(Component)]
 pub struct Asteroid {
-    direction: Vec2,
-    speed: f32,
-
     rotation_speed: f32,
     velocity: Vec2,
 
@@ -94,8 +91,6 @@ pub fn spawn_asteroid(
         },
         WrapAround,
         Asteroid {
-            direction,
-            speed,
             rotation_speed,
             velocity: direction * speed,
             tier,

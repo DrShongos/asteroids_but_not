@@ -1,6 +1,9 @@
 use bevy::prelude::*;
 
-use crate::ship::Ship;
+use crate::{
+    projectile::{ProjectileShooter, ShootProjectileEvent},
+    ship::Ship,
+};
 
 #[derive(Component)]
 pub struct Player;
@@ -15,13 +18,14 @@ impl Plugin for PlayerPlugin {
 
 impl PlayerPlugin {
     fn player_input(
-        mut player_query: Query<(&mut Ship, &mut Transform), With<Player>>,
+        mut player_query: Query<(Entity, &mut Ship, &mut Transform), With<Player>>,
+        mut shoot_event: EventWriter<ShootProjectileEvent>,
         keys: Res<Input<KeyCode>>,
         time: Res<Time>,
     ) {
         let player = player_query.get_single_mut();
 
-        if let Ok((mut ship, mut transform)) = player {
+        if let Ok((entity, mut ship, mut transform)) = player {
             let delta = time.delta_seconds();
 
             if keys.pressed(KeyCode::A) || keys.pressed(KeyCode::Left) {
@@ -36,6 +40,14 @@ impl PlayerPlugin {
                 ship.moving = true;
             } else {
                 ship.moving = false;
+            }
+
+            if keys.pressed(KeyCode::Space) {
+                shoot_event.send(ShootProjectileEvent {
+                    spawn_position: transform.translation.truncate(),
+                    direction: ship.direction,
+                    shooter: entity,
+                })
             }
         }
     }

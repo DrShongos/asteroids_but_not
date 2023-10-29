@@ -4,6 +4,7 @@ use bevy::prelude::*;
 pub struct GameAssets {
     pub ship1_handle: Handle<TextureAtlas>,
     pub asteroid_handle: Handle<TextureAtlas>,
+    pub bullet_handle: Handle<Image>,
 }
 
 pub struct GameAssetsPlugin;
@@ -37,9 +38,12 @@ impl GameAssetsPlugin {
             &mut texture_atlases,
         );
 
+        let bullet_handle = asset_server.load("laser-bullet.png");
+
         let game_assets = GameAssets {
             ship1_handle,
             asteroid_handle,
+            bullet_handle,
         };
 
         commands.insert_resource(game_assets);

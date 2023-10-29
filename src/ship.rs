@@ -1,4 +1,9 @@
-use crate::{collision::Collider, game_assets::GameAssets, player::Player, world::WrapAround};
+use std::time::Duration;
+
+use crate::{
+    collision::Collider, game_assets::GameAssets, player::Player, projectile::ProjectileShooter,
+    world::WrapAround,
+};
 use bevy::{
     math::{vec2, vec3},
     prelude::*,
@@ -14,6 +19,7 @@ pub struct Ship {
     pub moving: bool,
 
     velocity: Vec2,
+    pub direction: Vec2,
 }
 
 impl Ship {
@@ -25,14 +31,9 @@ impl Ship {
             rotation_speed,
             moving: false,
             velocity: Vec2::ZERO,
+            direction: Vec2::ZERO,
         }
     }
-}
-
-#[derive(Component)]
-pub struct ShipInput {
-    pub forward: bool,
-    pub rotate: bool,
 }
 
 pub struct ShipPlugin;
@@ -66,6 +67,12 @@ impl ShipPlugin {
             Collider {
                 bounds: vec2(16.0 * 4.0, 16.0 * 4.0),
             },
+            ProjectileShooter {
+                projectile_speed: 1000.0,
+                projectile_range: 300.0,
+
+                attack_speed: Timer::new(Duration::from_millis(500), TimerMode::Once),
+            },
         ));
     }
 
@@ -86,6 +93,9 @@ impl ShipPlugin {
 
             // Turn the ship's movement into vec3 so that it can be applied
             let movement = direction * ship.velocity.extend(0.);
+
+            // Store the ship's direction so it can be used by projectiles
+            ship.direction = direction.truncate();
 
             transform.translation += movement;
         }

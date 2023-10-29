@@ -4,6 +4,7 @@ mod asteroid;
 mod collision;
 mod game_assets;
 mod player;
+mod projectile;
 mod ship;
 mod world;
 
@@ -17,6 +18,7 @@ fn main() {
             world::WorldPlugin,
             asteroid::AsteroidPlugin,
             collision::CollisionPlugin,
+            projectile::ProjectilePlugin,
         ))
         .add_systems(Startup, setup_camera)
         .run();
