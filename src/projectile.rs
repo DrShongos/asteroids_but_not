@@ -32,7 +32,10 @@ pub struct ProjectilePlugin;
 impl Plugin for ProjectilePlugin {
     fn build(&self, app: &mut App) {
         app.add_event::<ShootProjectileEvent>()
-            .add_systems(Update, (Self::shoot_projectile_event, Self::handle_attack_speed))
+            .add_systems(
+                Update,
+                (Self::shoot_projectile_event, Self::handle_attack_speed),
+            )
             .add_systems(FixedUpdate, Self::handle_projectiles);
     }
 }

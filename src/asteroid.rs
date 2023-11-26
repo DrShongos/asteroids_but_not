@@ -1,4 +1,5 @@
 use bevy::{math::vec2, prelude::*};
+use rand::Rng;
 
 use crate::{collision::Collider, game_assets::GameAssets, world::WrapAround};
 
@@ -7,16 +8,25 @@ pub struct Asteroid {
     rotation_speed: f32,
     velocity: Vec2,
 
-    tier: u16,
-    hits: u16,
+    pub tier: u16,
+    pub hits: u16,
+}
+
+#[derive(Event)]
+pub struct AsteroidDestructionEvent {
+    pub entity: Entity,
+    pub asteroid_tier: u16,
+    pub destruction_point: Vec3,
 }
 
 pub struct AsteroidPlugin;
 
 impl Plugin for AsteroidPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(Startup, Self::populate_with_asteroids)
-            .add_systems(FixedUpdate, Self::asteroid_movement);
+        app.add_event::<AsteroidDestructionEvent>()
+            .add_systems(Startup, Self::populate_with_asteroids)
+            .add_systems(FixedUpdate, Self::asteroid_movement)
+            .add_systems(Update, Self::asteroid_destruction_event);
     }
 }
 
@@ -62,6 +72,50 @@ impl AsteroidPlugin {
 
             transform.translation += movement;
             transform.rotate_z(asteroid.rotation_speed * delta);
+        }
+    }
+
+    fn asteroid_destruction_event(
+        mut commands: Commands,
+        mut asteroid_destruction: EventReader<AsteroidDestructionEvent>,
+        game_assets: Res<GameAssets>,
+        atlases: Res<Assets<TextureAtlas>>,
+    ) {
+
+        let asteroid_variants = atlases.get(&game_assets.asteroid_handle).unwrap().len();
+        
+        for event in asteroid_destruction.iter() {
+            let num_splits = if event.asteroid_tier >= 6 {
+                4
+            } else if event.asteroid_tier > 1 {
+                2
+            } else {
+                0
+            };
+
+            commands.entity(event.entity).despawn_recursive();
+
+            let mut rng = rand::thread_rng();
+
+
+            for _ in 0..num_splits {
+                let direction = vec2(rng.gen_range(-1.0..1.0), rng.gen_range(-1.0..1.0));
+                let speed = rng.gen_range(50.0..100.0) * event.asteroid_tier as f32;
+                let asteroid_index = rng.gen_range(0..asteroid_variants);
+
+                let rotation_speed = rng.gen_range(1.0..15.0);
+
+                spawn_asteroid(
+                    &mut commands,
+                    event.asteroid_tier - 1,
+                    rotation_speed,
+                    speed,
+                    direction,
+                    event.destruction_point.truncate(),
+                    &game_assets,
+                    asteroid_index,
+                );
+            }
         }
     }
 }

@@ -1,4 +1,4 @@
-use bevy::prelude::*;
+use bevy::{prelude::*, render::camera::ScalingMode};
 
 mod asteroid;
 mod collision;
@@ -25,7 +25,8 @@ fn main() {
 }
 
 fn setup_camera(mut commands: Commands) {
-    let camera2d_bundle = Camera2dBundle::default();
+    let mut camera2d_bundle = Camera2dBundle::default();
+    camera2d_bundle.projection.scaling_mode = ScalingMode::Fixed { width: 1280.0, height: 720.0 };
 
     commands.spawn(camera2d_bundle);
 }
